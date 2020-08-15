@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const config = require('./config')
 const api = require('./api')
 const createStudentAPI = require('./src/api/createStudent')
+const getStudentAPI = require('./src/api/getStudent')
 const middleware = require('./middleware')
 
 const PORT = config.SERVER_PORT
@@ -13,6 +14,7 @@ app.use(bodyParser.json())
 
 app.get('/health', api.getHealth)
 app.put('/:studentId/*', createStudentAPI.createStudent)
+app.get('/:studentId/*', getStudentAPI.getStudent)
 
 app.use(middleware.handleError)
 app.use(middleware.notFound)

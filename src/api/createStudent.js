@@ -10,7 +10,7 @@ async function createStudent (req, res, next) {
   const studentId = req.params.studentId
   const propertyPath = req.params[0]
   const requestData = req.body
-  logger.info(`request received studentId = ${studentId} propertyPath = ${propertyPath} data = ${JSON.stringify(requestData)}`)
+  logger.info(`create student request studentId = ${studentId} propertyPath = ${propertyPath} data = ${JSON.stringify(requestData)}`)
 
   if (utils.isEmpty(requestData)) {
     return res.status(400).json({ success: false, message: messages.REQUEST_BODY_MANDATORY })

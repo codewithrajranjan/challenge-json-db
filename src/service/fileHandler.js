@@ -13,7 +13,31 @@ module.exports = {
   fileExists,
   readFile,
   getFilePath,
-  getDataDirectoryPath
+  getDataDirectoryPath,
+  propertyExists,
+  getPropertyValue
+}
+
+async function propertyExists (fileId, path) {
+  const fileData = await readFile(fileId)
+  try {
+    logger.debug(`searching property ${path} on file id${fileId}`)
+    return jsonHandler.has(fileData, path)
+  } catch (e) {
+    logger.error(`failed to validate property ${path} on file id ${fileId} with error ${JSON.stringify(e)}`)
+    return false
+  }
+}
+
+async function getPropertyValue (fileId, propertyPath) {
+  const fileData = await readFile(fileId)
+  try {
+    logger.debug(`find property-path ${propertyPath} for file id ${fileId}`)
+    return jsonHandler.get(fileData, propertyPath)
+  } catch (e) {
+    logger.error(`failed to get property ${propertyPath} on file id ${fileId} with error ${JSON.stringify(e)}`)
+    return false
+  }
 }
 
 async function writeFile (fileId, data) {

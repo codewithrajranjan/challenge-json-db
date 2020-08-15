@@ -3,12 +3,25 @@ const logger = require('../../src/logger/logger')
 const utils = require('underscore')
 module.exports = {
   studentExists,
+  studentPropertyExists,
   createStudent,
-  updateStudent
+  updateStudent,
+  getStudentById,
+  getStudentPropertyValue
 }
 
 async function studentExists (studentId) {
   return fileHandler.fileExists(studentId)
+}
+
+async function studentPropertyExists (studentId, propertyPath) {
+  const pathDotSeparated = getDotSeparatedPath(propertyPath)
+  return fileHandler.propertyExists(studentId, pathDotSeparated)
+}
+
+async function getStudentPropertyValue (studentId, propertyPath) {
+  const pathDotSeparated = getDotSeparatedPath(propertyPath)
+  return fileHandler.getPropertyValue(studentId, pathDotSeparated)
 }
 
 async function createStudent (studentId, data) {
@@ -16,7 +29,17 @@ async function createStudent (studentId, data) {
 }
 
 async function updateStudent (studentId, dataPath, data) {
-  const propertyArray = dataPath.split('/')
+  const pathDotSeparated = getDotSeparatedPath(dataPath)
+  logger.info(`update student with id ${studentId} for path ${pathDotSeparated}`)
+  return fileHandler.updateFile(studentId, pathDotSeparated, data)
+}
+
+async function getStudentById (studentId) {
+  return fileHandler.readFile(studentId)
+}
+
+function getDotSeparatedPath (path) {
+  const propertyArray = path.split('/')
   const sanitizedPropertyArray = []
   propertyArray.forEach(function (item) {
     if (!utils.isEmpty(item)) {
@@ -24,6 +47,5 @@ async function updateStudent (studentId, dataPath, data) {
     }
   })
   const pathDotSeparated = sanitizedPropertyArray.join('.')
-  logger.info(`update student with id ${studentId} for path ${pathDotSeparated}`)
-  return fileHandler.updateFile(studentId, pathDotSeparated, data)
+  return pathDotSeparated
 }

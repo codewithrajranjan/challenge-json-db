@@ -9,6 +9,7 @@
   "keywords": [],
   "license": "MIT",
   "devDependencies": {
+    "fs-extra": "^9.0.1",
     "get-port-sync": "^1.0.0",
     "jsonist": "^2.1.0",
     "standard": "^12.0.1",
