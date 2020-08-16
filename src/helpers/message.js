@@ -7,7 +7,7 @@ module.exports = {
   STUDENT_NOT_FOUND: 'student not found',
   STUDENT_PROPERTY_NOT_FOUND: 'student property not found',
   STUDENT_PROPERTY_FOUND: 'student property found',
-  STUDENT_FOUND: 'student not found',
+  STUDENT_FOUND: 'student found',
   STUDENT_DELETED: 'student delete success',
   STUDENT_DELETED_FAILED: 'student delete failed',
   STUDENT_DELETE_PROPERTY_NOT_FOUND: 'student delete property not found',
