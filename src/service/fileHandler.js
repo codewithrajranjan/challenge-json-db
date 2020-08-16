@@ -109,7 +109,7 @@ async function updateFile (fileId, path, data) {
 }
 
 async function deleteProperty (fileId, propertyPath) {
-  let fileData = await readFile(fileId)
+  const fileData = await readFile(fileId)
   try {
     deletePropertyPath(fileData, propertyPath)
     await writeFile(fileId, fileData)
