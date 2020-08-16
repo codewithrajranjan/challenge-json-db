@@ -7,7 +7,13 @@ module.exports = {
   createStudent,
   updateStudent,
   getStudentById,
-  getStudentPropertyValue
+  getStudentPropertyValue,
+  deleteStudentById,
+  deleteStudentProperty
+}
+
+async function deleteStudentById (studentId) {
+  return fileHandler.deleteFileById(studentId)
 }
 
 async function studentExists (studentId) {
@@ -22,6 +28,11 @@ async function studentPropertyExists (studentId, propertyPath) {
 async function getStudentPropertyValue (studentId, propertyPath) {
   const pathDotSeparated = getDotSeparatedPath(propertyPath)
   return fileHandler.getPropertyValue(studentId, pathDotSeparated)
+}
+
+async function deleteStudentProperty (studentId, propertyPath) {
+  const pathDotSeparated = getDotSeparatedPath(propertyPath)
+  return fileHandler.deleteProperty(studentId, pathDotSeparated)
 }
 
 async function createStudent (studentId, data) {

@@ -5,6 +5,7 @@ const logger = require('../logger/logger')
 const fsWriteFile = util.promisify(fs.writeFile)
 const fsFileAccess = util.promisify(fs.access)
 const fsReadFile = util.promisify(fs.readFile)
+const fsUnlink = util.promisify(fs.unlink)
 const jsonHandler = require('nested-property')
 const config = require('../../config')
 module.exports = {
@@ -15,7 +16,21 @@ module.exports = {
   getFilePath,
   getDataDirectoryPath,
   propertyExists,
-  getPropertyValue
+  getPropertyValue,
+  deleteFileById,
+  deleteProperty
+}
+
+async function deleteFileById (fileId) {
+  const filePath = getFilePath(fileId)
+  try {
+    logger.info(`deleting file with id ${fileId}`)
+    await fsUnlink(filePath)
+    return true
+  } catch (e) {
+    logger.error(`failed to delete file with id ${fileId} with error ${JSON.stringify(e)}`)
+    return false
+  }
 }
 
 async function propertyExists (fileId, path) {
@@ -93,6 +108,16 @@ async function updateFile (fileId, path, data) {
   }
 }
 
+async function deleteProperty (fileId, propertyPath) {
+  let fileData = await readFile(fileId)
+  try {
+    deletePropertyPath(fileData, propertyPath)
+    await writeFile(fileId, fileData)
+  } catch (e) {
+    logger.error(`failed to delete ${propertyPath} for file id ${fileId}`)
+  }
+}
+
 function getDataDirectoryPath () {
   const projectRootDirectory = config.PROJECT_DIR
   return `${projectRootDirectory}${path.sep}data`
@@ -100,4 +125,20 @@ function getDataDirectoryPath () {
 
 function getFilePath (fileId) {
   return `${getDataDirectoryPath()}${path.sep}${fileId}.json`
+}
+
+function deletePropertyPath (obj, path) {
+  if (!obj || !path) {
+    return
+  }
+  if (typeof path === 'string') {
+    path = path.split('.')
+  }
+  for (let i = 0; i < path.length - 1; i++) {
+    obj = obj[path[i]]
+    if (typeof obj === 'undefined') {
+      return
+    }
+  }
+  delete obj[path.pop()]
 }
